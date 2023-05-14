@@ -13,8 +13,9 @@ public class Food {
     {
         return position;
     }
-    public void pickLocation()
+    public void pickLocation(Snake s)
     {
         position = new Vector2((int)(Math.random() * Constants.MAP_SIZE), (int)(Math.random() * Constants.MAP_SIZE));
+
     }
 }

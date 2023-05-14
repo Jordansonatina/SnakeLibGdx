@@ -52,6 +52,19 @@ public class Game extends ApplicationAdapter {
 		renderer.rect(f.getPos().x * Constants.CELL_SIZE + 4, f.getPos().y * Constants.CELL_SIZE + 4, Constants.CELL_SIZE - 8, Constants.CELL_SIZE - 8);
 	}
 
+	private void drawGrid()
+	{
+		for (int row = 0; row < Constants.MAP_SIZE; row++)
+		{
+			for (int col = 0; col < Constants.MAP_SIZE; col++)
+			{
+				renderer.setColor(Color.DARK_GRAY);
+				renderer.rect(col*Constants.CELL_SIZE, row * Constants.CELL_SIZE, Constants.CELL_SIZE, Constants.CELL_SIZE);
+
+			}
+		}
+	}
+
 	private void getUserInput()
 	{
 		if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT))
@@ -72,11 +85,46 @@ public class Game extends ApplicationAdapter {
 		}
 	}
 
+	public void AI()
+	{
+
+
+		if (s.getPos().y > f.getPos().y && direction.y != 1) {
+			direction = new Vector2(0, -1);
+		}
+
+		if (s.getPos().y < f.getPos().y && direction.y != -1) {
+			direction = new Vector2(0, 1);
+		}
+
+		if (s.getPos().x < f.getPos().x && direction.x != -1) {
+			direction = new Vector2(1, 0);
+		}
+
+		if (s.getPos().x > f.getPos().x && direction.x != 1) {
+			direction = new Vector2(-1, 0);
+		}
+
+		if (s.hitTail(direction))
+		{
+			direction = s.getSafeDirection();
+		}
+
+
+
+	}
+
 	@Override
 	public void render () {
 		ScreenUtils.clear(0, 0, 0, 1);
 
 		getUserInput();
+
+		AI();
+
+		renderer.begin(ShapeRenderer.ShapeType.Line);
+		drawGrid();
+		renderer.end();
 
 		renderer.begin(ShapeRenderer.ShapeType.Filled);
 		drawFood();
@@ -87,11 +135,24 @@ public class Game extends ApplicationAdapter {
 		if (tick > Constants.FRAME_RATE)
 			tick = 0;
 
+		s.findSafeDirection(); // find the direction in which you won't hit a tail
 		s.loop();
 		s.eat(f);
 		// update snake one time per second
 		if (tick == Constants.FRAME_RATE)
 			s.move(direction);
+
+
+		if (s.hitTail())
+		{
+			s.clearTail();
+			s.setLength(1);
+			s.setPos(new Vector2(0, 0));
+		}
+
+
+
+
 
 
 	}
