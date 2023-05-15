@@ -3,6 +3,7 @@ package com.jordansonatina.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -36,7 +37,8 @@ public class Game extends ApplicationAdapter {
 
 		batch = new SpriteBatch();
 
-		generator = new FreeTypeFontGenerator(Gdx.files.internal("/Users/johnearnest/Desktop/Snake/assets/ARCADECLASSIC.ttf"));
+		String temp1 = System.getProperty("user.dir");
+		generator = new FreeTypeFontGenerator(Gdx.files.internal( temp1+"/ARCADECLASSIC.ttf"));
 		parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		parameter.size = 50;
 		font = generator.generateFont(parameter); // font size 12 pixels
