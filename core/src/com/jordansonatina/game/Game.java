@@ -136,7 +136,7 @@ public class Game extends ApplicationAdapter {
 
 		getUserInput();
 
-		AI();
+		//AI();
 
 		renderer.begin(ShapeRenderer.ShapeType.Line);
 		drawGrid();
