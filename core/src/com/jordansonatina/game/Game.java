@@ -5,7 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -16,6 +18,13 @@ public class Game extends ApplicationAdapter {
 	Snake s;
 	Food f;
 
+	FreeTypeFontGenerator generator;
+
+	FreeTypeFontGenerator.FreeTypeFontParameter parameter;
+	BitmapFont font;
+
+	SpriteBatch batch;
+
 	private int tick = 0;
 	private Vector2 direction = new Vector2(0, 0);
 	
@@ -24,6 +33,13 @@ public class Game extends ApplicationAdapter {
 		renderer = new ShapeRenderer();
 		s = new Snake();
 		f = new Food();
+
+		batch = new SpriteBatch();
+
+		generator = new FreeTypeFontGenerator(Gdx.files.internal("/Users/johnearnest/Desktop/Snake/assets/ARCADECLASSIC.ttf"));
+		parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		parameter.size = 50;
+		font = generator.generateFont(parameter); // font size 12 pixels
 	}
 
 	private void drawSnake()
@@ -131,16 +147,21 @@ public class Game extends ApplicationAdapter {
 		drawSnake();
 		renderer.end();
 
+		batch.begin();
+		font.draw(batch, "Score    " + (s.getLength() - 1), 0, Constants.HEIGHT-10);
+		batch.end();
+
 		tick++;
-		if (tick > Constants.FRAME_RATE)
+		if (tick > Constants.GAME_SPEED)
 			tick = 0;
 
 		s.findSafeDirection(); // find the direction in which you won't hit a tail
 		s.loop();
 		s.eat(f);
 		// update snake one time per second
-		if (tick == Constants.FRAME_RATE)
+		if (tick == Constants.GAME_SPEED)
 			s.move(direction);
+
 
 
 		if (s.hitTail())
@@ -160,5 +181,6 @@ public class Game extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		renderer.dispose();
+		generator.dispose();
 	}
 }
